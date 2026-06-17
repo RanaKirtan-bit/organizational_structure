@@ -209,16 +209,15 @@ function TreeNode({
 
   return (
     <div className="w-full">
-      <div className="border-2 border-gray-300 rounded-lg bg-white p-4">
+      <div className="border border-gray-300 rounded-xl bg-white p-4 shadow-sm hover:shadow-lg hover:border-blue-400 transition-all duration-300">
         <div className="flex justify-between items-center">
           <h3 className="font-semibold text-lg">{node.title}</h3>
-
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               {node.type === "subordinate" && (
                 <button
                   onClick={() => addBranchMember(node.id)}
-                  className="w-7 h-7 rounded-full bg-green-500 text-white font-bold"
+                  className="w-7 h-7 rounded-full bg-green-500 text-white font-bold cursor-pointer hover:bg-green-600 hover:scale-110 active:scale-95 transition-all duration-200 shadow-md"
                 >
                   +
                 </button>
@@ -227,7 +226,7 @@ function TreeNode({
               {!isRoot && (
                 <button
                   onClick={() => deleteNode(node.id)}
-                  className="w-7 h-7 rounded-full bg-red-500 text-white font-bold"
+                  className="w-7 h-7 rounded-full bg-red-500 text-white font-bold cursor-pointer hover:bg-red-600 hover:scale-110 active:scale-95 transition-all duration-200 shadow-md"
                 >
                   -
                 </button>
@@ -236,7 +235,7 @@ function TreeNode({
 
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="text-xl font-bold px-2"
+              className="text-xl font-bold px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-all duration-200"
             >
               ⋮
             </button>
@@ -251,7 +250,7 @@ function TreeNode({
                   addNode(node.id);
                   setShowMenu(false);
                 }}
-                className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 hover:shadow-md transition-all duration-200"
               >
                 Add New Subordinate Branch
               </button>
@@ -263,7 +262,7 @@ function TreeNode({
                   addSubordinateBranch(node.id);
                   setShowMenu(false);
                 }}
-                className="bg-blue-600 text-white px-3 py-2 rounded"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 hover:shadow-md transition-all duration-200"
               >
                 Add Subordinate Branch
               </button>
@@ -275,7 +274,7 @@ function TreeNode({
                   addSubBranchMember(node.id);
                   setShowMenu(false);
                 }}
-                className="bg-purple-600 text-white px-3 py-2 rounded hover:bg-purple-700"
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-purple-700 hover:shadow-md transition-all duration-200"
               >
                 Add Sub Branch Member
               </button>
@@ -285,7 +284,7 @@ function TreeNode({
       </div>
 
       {node.children.length > 0 && (
-        <div className="mt-4 border border-gray-300 rounded-lg p-4">
+        <div className="mt-4 border border-gray-300 rounded-lg p-4 bg-gray-50 hover:border-blue-200 transition-all duration-300">
           <div
             className={
               isRoot ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-4"
