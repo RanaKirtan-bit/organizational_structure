@@ -30,6 +30,7 @@ export default function App() {
             childCounter: 0,
             memberCounter: 0,
             subordinateCounter: 0,
+            isNew: true,
             children: [],
           };
         } else {
@@ -41,6 +42,7 @@ export default function App() {
             type: "member",
             path: `${node.path}/${nextNumber}`,
             childCounter: 0,
+            isNew: true,
             children: [],
           };
         }
@@ -74,6 +76,7 @@ export default function App() {
           childCounter: 0,
           memberCounter: 0,
           subordinateCounter: 0,
+          isNew: true,
           children: [],
         };
 
@@ -106,6 +109,7 @@ export default function App() {
           childCounter: 0,
           memberCounter: 0,
           subordinateCounter: 0,
+          isNew: true,
           children: [],
         };
 
@@ -138,6 +142,7 @@ export default function App() {
           childCounter: 0,
           memberCounter: 0,
           subordinateCounter: 0,
+          isNew: true,
           children: [],
         };
 
@@ -169,19 +174,19 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 p-8">
       <h1 className="text-center text-4xl font-bold mb-10">
         Organizational Structure
       </h1>
 
-      <div className="max-w-7xl mx-auto bg-white p-6 rounded-lg border border-gray-300">
+      <div className="max-w-7xl mx-auto bg-white/90 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border">
         <div className="flex justify-center">
           <TreeNode
             node={tree}
             addNode={addNode}
             addBranchMember={addBranchMember}
             addSubordinateBranch={addSubordinateBranch}
-            addSubBranchMember={addBranchMember}
+            addSubBranchMember={addSubBranchMember}
             deleteNode={deleteNode}
             isRoot
           />
@@ -201,42 +206,65 @@ function TreeNode({
   isRoot = false,
 }) {
   const [showMenu, setShowMenu] = useState(false);
+
   const members = node.children.filter((child) => child.type === "member");
 
   const subordinates = node.children.filter(
     (child) => child.type === "subordinate"
   );
 
+  const styles = {
+    director: {
+      card: "bg-gradient-to-r from-indigo-600 to-blue-600 text-black text-xl border-indigo-500",
+      container: "bg-indigo-50 border-indigo-200",
+    },
+
+    subordinate: {
+      card: "bg-gradient-to-r from-emerald-500 to-green-600 text-black text-xl border-green-500",
+      container: "bg-green-50 border-green-200",
+    },
+
+    member: {
+      card: "bg-gradient-to-r from-pink-400 to-pink-500 text-black text-xl border-orange-400",
+      container: "bg-pink-50 border-pink-200",
+    },
+  };
+
+  const style = styles[node.type];
+
   return (
     <div className="w-full">
-      <div className="border border-gray-300 rounded-xl bg-white p-4 shadow-sm hover:shadow-lg hover:border-blue-400 transition-all duration-300">
+      <div
+        className={`border rounded-2xl p-4 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1
+          ${style.card}
+          ${node.isNew ? "new-node glow-new ring-4 ring-yellow-300" : ""}
+        `}
+      >
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-lg">{node.title}</h3>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              {node.type === "subordinate" && (
-                <button
-                  onClick={() => addBranchMember(node.id)}
-                  className="w-7 h-7 rounded-full bg-green-500 text-white font-bold cursor-pointer hover:bg-green-600 hover:scale-110 active:scale-95 transition-all duration-200 shadow-md"
-                >
-                  +
-                </button>
-              )}
+          <h3 className="font-bold text-2xl">{node.title}</h3>
 
-              {!isRoot && (
-                <button
-                  onClick={() => deleteNode(node.id)}
-                  className="w-7 h-7 rounded-full bg-red-500 text-white font-bold cursor-pointer hover:bg-red-600 hover:scale-110 active:scale-95 transition-all duration-200 shadow-md"
-                >
-                  -
-                </button>
-              )}
-            </div>
+          <div className="flex items-center gap-2">
+            {node.type === "subordinate" && (
+              <button
+                onClick={() => addBranchMember(node.id)}
+                className="w-8 h-8 rounded-full text-xl flex justify-center bg-white text-green-600 font-bold shadow-md hover:scale-110 transition cursor-pointer"
+              >
+                +
+              </button>
+            )}
+
+            {!isRoot && (
+              <button
+                onClick={() => deleteNode(node.id)}
+                className="w-8 h-8 rounded-full text-xl flex justify-center bg-red-500 text-white font-bold shadow-md hover:scale-110 transition cursor-pointer"
+              >
+                −
+              </button>
+            )}
 
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="text-xl font-bold px-3 py-1 rounded-md cursor-pointer hover:bg-gray-100 transition-all duration-200"
-            >
+              className="text-2xl px-2 font-bold hover:bg-white/20 rounded-md cursor-pointer">
               ⋮
             </button>
           </div>
@@ -250,8 +278,7 @@ function TreeNode({
                   addNode(node.id);
                   setShowMenu(false);
                 }}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 hover:shadow-md transition-all duration-200"
-              >
+                className="bg-white text-blue-700 rounded-lg px-4 py-2 font-medium hover:bg-blue-50 cursor-pointer">
                 Add New Subordinate Branch
               </button>
             )}
@@ -262,8 +289,7 @@ function TreeNode({
                   addSubordinateBranch(node.id);
                   setShowMenu(false);
                 }}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 hover:shadow-md transition-all duration-200"
-              >
+                className="bg-white text-green-700 rounded-lg px-4 py-2 font-mediumhover:bg-green-50 cursor-pointer">
                 Add Subordinate Branch
               </button>
             )}
@@ -274,8 +300,7 @@ function TreeNode({
                   addSubBranchMember(node.id);
                   setShowMenu(false);
                 }}
-                className="bg-purple-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-purple-700 hover:shadow-md transition-all duration-200"
-              >
+                className="bg-white text-orange-700 rounded-lg px-4 py-2 font-medium hover:bg-orange-50 cursor-pointer">
                 Add Sub Branch Member
               </button>
             )}
@@ -284,35 +309,41 @@ function TreeNode({
       </div>
 
       {node.children.length > 0 && (
-        <div className="mt-4 border border-gray-300 rounded-lg p-4 bg-gray-50 hover:border-blue-200 transition-all duration-300">
+        <div className="mt-5">
           <div
-            className={
-              isRoot ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-4"
-            }
-          >
-            {members.map((child) => (
-              <TreeNode
-                key={child.id}
-                node={child}
-                addNode={addNode}
-                addBranchMember={addBranchMember}
-                addSubordinateBranch={addSubordinateBranch}
-                addSubBranchMember={addSubBranchMember}
-                deleteNode={deleteNode}
-              />
-            ))}
+            className={`p-5 ${style.container}`}>
+            <div
+              className={
+                isRoot ? "grid grid-cols-1 lg:grid-cols-2 gap-6" : "space-y-4"
+              }
+            >
+              {members.map((child) => (
+                <TreeNode
+                  key={child.id}
+                  node={child}
+                  addNode={addNode}
+                  addBranchMember={addBranchMember}
+                  addSubordinateBranch={addSubordinateBranch}
+                  addSubBranchMember={addSubBranchMember}
+                  deleteNode={deleteNode}
+                />
+              ))}
 
-            {subordinates.map((child) => (
-              <TreeNode
-                key={child.id}
-                node={child}
-                addNode={addNode}
-                addBranchMember={addBranchMember}
-                addSubordinateBranch={addSubordinateBranch}
-                addSubBranchMember={addSubBranchMember}
-                deleteNode={deleteNode}
-              />
-            ))}
+              {subordinates.map((child) => (
+                <div
+                  key={child.id}
+                  className="border-2 border-green-300 rounded-2xl bg-white/80 p-4 shadow-md hover:shadow-lg transition-all">
+                  <TreeNode
+                    node={child}
+                    addNode={addNode}
+                    addBranchMember={addBranchMember}
+                    addSubordinateBranch={addSubordinateBranch}
+                    addSubBranchMember={addSubBranchMember}
+                    deleteNode={deleteNode}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

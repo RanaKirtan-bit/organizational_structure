@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.new-node {
+  animation: fadeInScale 0.5s ease-out;
+}
